@@ -8,17 +8,27 @@ def help():
 def error(code):
  print('Error:\n' + code)
 
-
+inputf = 0
+outputf = 0
+mashineID = 0
 #args are input filename, output filename, mashineID
-if (len(sys.argv) != 4):
+if (len(sys.argv) == 4):
+ inputf = sys.argv[1]
+ outputf = sys.argv[2]
+ mashineID = sys.argv[3]
+elif (len(sys.argv) == 1):
+ print("Manual input routine :")
+ inputf = input("please type your dea description file")
+ outputf = input("please type the filename/path to the output file")
+ mashineID = input ("please type a unique name for the mashine")
+	
+else:	
  help()
  exit()
 
 #TODO arg checking with regex
 
-inputf = sys.argv[1]
-outputf = sys.argv[2]
-mashineID = sys.argv[3]
+
 
 inputf = open(inputf, "r")
 input = inputf.readlines()
@@ -139,9 +149,9 @@ inputf.close()
 
 #now we can print to a file
 
-writef = open (sys.argv[2], 'w')
+writef = open (outputf, 'w')
 
-mname = sys.argv[3]
+
 
 #writing standard header
 
@@ -160,7 +170,7 @@ struct deacoder_statemashine
 
 writef.write(
     """
-enum """ + mname.lower() + """_states
+enum """ + mashineID.lower() + """_states
 {
 \ttrap = -1,\t\t//default trap state
 """)
@@ -171,21 +181,21 @@ for x in qstatement:
  i += 1
 
 writef.write("""
-\tNUM_"""+mname.upper()+"""_STATES
+\tNUM_"""+mashineID.upper()+"""_STATES
 };
 """)
 
 #write init function
 writef.write("""
-void """+ mname.lower() + """_init(deacoder_statemashine* M)
+void """+ mashineID.lower() + """_init(deacoder_statemashine* M)
 {
-    M->q = """+ mname.lower() + """_states::"""+startstate+""";
+    M->q = """+ mashineID.lower() + """_states::"""+startstate+""";
 }
 """)
 
 #write d funtion
 writef.write("""
-void """+ mname.lower() + """_d(deacoder_statemashine* M, char sym)
+void """+ mashineID.lower() + """_d(deacoder_statemashine* M, char sym)
 {
     switch(M->q)
     {
@@ -195,7 +205,7 @@ def writeif(wf):
  wf.write("""
 \t\t\tif(""" + alphalist[ifst[0]] + """)
 \t\t\t{
-\t\t\t    M->q = """+ mname.lower() + """_states::""" + ifst[1] + """;
+\t\t\t    M->q = """+ mashineID.lower() + """_states::""" + ifst[1] + """;
 \t\t\t}
 """)
 
@@ -203,14 +213,14 @@ def writeelseif(wf):
  wf.write("""
 \t\t\telse if(""" + alphalist[ifst[0]] + """)
 \t\t\t{
-\t\t\t    M->q = """+ mname.lower() + """_states::""" + ifst[1] + """;
+\t\t\t    M->q = """+ mashineID.lower() + """_states::""" + ifst[1] + """;
 \t\t\t}
 """)
 
 for func in funclist:
  if func[1] != []:       
   writef.write("""
-\t\tcase """+ mname.lower()+"""_states::"""+ func[0]+ """:
+\t\tcase """+ mashineID.lower()+"""_states::"""+ func[0]+ """:
 """)
   i = 0
   for ifst in func[1]:
@@ -223,7 +233,7 @@ for func in funclist:
   writef.write("""
 \t\t\telse
 \t\t\t{
-\t\t\t    M->q = """+ mname.lower() + """_states::trap;
+\t\t\t    M->q = """+ mashineID.lower() + """_states::trap;
 \t\t\t}
 
 \t\tbreak;
@@ -232,7 +242,7 @@ for func in funclist:
 
 
 writef.write("""
-\t\tcase """ + mname.lower() + """_states::trap:
+\t\tcase """ + mashineID.lower() + """_states::trap:
 \t\tdefault:
 \t\tbreak;
 \t\t}
@@ -241,7 +251,7 @@ writef.write("""
 
 #at last the exit function
 writef.write("""
-int """ + mname.lower() +"""_exit(deacoder_statemashine* M)
+int """ + mashineID.lower() +"""_exit(deacoder_statemashine* M)
 {
 	int cs = M->q;
 	return (""")
