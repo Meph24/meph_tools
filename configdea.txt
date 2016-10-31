@@ -1,0 +1,35 @@
+Q:{q0,q1,q2,q3,q4,q5,q6,q7,q8,q9}
+s(space):{space}
+s(raute):{#}
+s(A_z_):{a-z,A-Z,_}
+s(equal):{=}
+s(all_nspace):{\space}
+s(anfz):{quote}
+s(all_anfz):{\quote \esc}
+s(esc):{esc}
+s(all):{}
+s(all_nspacenquote):{\space \ quote}
+d(q0,space) = q0
+d(q0, raute) = q1
+d(q1,A_z_) = q1
+d(q1,space) = q2
+d(q2, space) = q2
+d(q2, A_z_) = q3
+d(q3,A_z_) = q3
+d(q3, space) = q4
+d(q3, equal) = q5
+d(q4, equal) = q5
+d(q5, space) = q5
+d(q5, all_nspacenquote) = q6
+d(q6, all_nspace) = q6
+d(q6, space) = q7
+d(q7, space) = q7
+d(q7, A_z_) = q3
+d(q7, raute) = q1
+d(q5, anfz) = q8
+d(q8, all_anfz) = q8
+d(q8, esc) = q9
+d(q8, anfz) = q7
+d(q9, all) = q8
+q0 : q0
+F:{q1,q2,q6,q7}

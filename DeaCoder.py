@@ -33,8 +33,6 @@ else:
 inputf = open(inputf, "r")
 input = inputf.readlines()
 
-print(input)
-
 alphalist = []
 funclist = []
 
@@ -53,11 +51,7 @@ for line in input:
  if re.match("F:[{].*[}]", line):
   finitestates = line
         
-print(qstatement)
-print(alphalist)
-print(funclist)
-print(startstate)
-print(finitestates)
+print (":::::::" + str(alphalist))
 
 def getStatesFromSet(states):
  states = re.search("[{].*[}]", states).group()
@@ -69,24 +63,43 @@ def getStatesFromSet(states):
 qstatement = getStatesFromSet(qstatement)
 finitestates = getStatesFromSet(finitestates)
 
-print(qstatement)
-print(finitestates)
 
 startstate = (startstate.split(':'))[1].strip()
 
 print(startstate)
 
+def symExcep(istr):
+ if istr == 'space':
+  istr = ' '
+ if istr == 'quote':
+  istr = '\"'
+ if istr == 'esc':
+  istr = '\\\\'
+ return istr
+
 def getSubExpression(istr):
+ print("beg: ", istr)
  if istr == "":
   return "(1)"
- if istr.find("\\") !=  -1:
+ if istr.find("\\") != -1:
   istr = istr.split("\\")
-  return "(" + getSubExpression(istr[0]) + "&& !"+ getSubExpression(istr[1])+ ")"
+  print("-----------------------------------", istr)
+  i = 0
+  retstr = ""
+  for x in istr:
+   if i == 0:
+    retstr += "(" + getSubExpression(x)
+   else:
+    retstr += "&& (!"+ getSubExpression(x)+")"  
+   i += 1
+  retstr += ")"
+  print ("ret: ", retstr)
+  return retstr
  elif istr.find("-") != -1:
   istr = istr.split("-")
-  return "((sym >= '" + istr[0].strip() + "') && (sym <= '" + istr[1].strip()+ "'))"
+  return "((sym >= '" + symExcep(istr[0].strip()) + "') && (sym <= '" + symExcep(istr[1].strip()) + "'))"
  else :
-  return "(sym == '" + istr + "')"
+  return "(sym == '" + symExcep(istr) + "')"
 
 def getExpression(istr):
  istr = istr.split(",")
@@ -119,7 +132,6 @@ alphalist = getAlphabeth(alphalist)
 
 def getFunction(istr):
  istr = istr.split("=")
- print(istr)
  left = re.search("[(].*[)]", istr[0])
  left = left.group()
  left = left.strip("()")
@@ -146,6 +158,15 @@ def funcjoin(l):
 funclist = funcjoin(funclist)
 
 inputf.close()
+
+print(qstatement)
+for a in alphalist:
+ print(a, ":", alphalist[a])
+ 
+for f in funclist:
+ print(f)
+print(startstate)
+print(finitestates)
 
 #now we can print to a file
 
