@@ -11,6 +11,7 @@ Arguments :
 
     [-f] [arg]     >    filepath
     [-d] [arg]     >    directory
+    [-m] [arg]     >    manual list, will start an input routine where you manually input values and select a splitter character
     [-o] [arg]     >    operator
     [-i]           >    ignore filetype (adjust only for names)
     Writes all files found in the directory to the file file specified
