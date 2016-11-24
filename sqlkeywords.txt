@@ -1,0 +1,16 @@
+select
+from
+where
+group
+by
+in
+not
+is
+having
+drop
+delete
+database
+table
+create
+view
+
